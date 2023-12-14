@@ -1,0 +1,239 @@
+MongoDB Practical Assignment
+1. Create an Employee collection with mentioned fields Employee 
+(eno,ename,salary,desig,dept:{deptno,deptname,location}, project:{pname,hrs})
+→
+db.createCollection('employee');
+2. Insert 10 documents in Employee collection
+→
+Query
+db.employee.insertMany([
+{
+eno:1,
+ename:"Prajakta Kamble",
+salary:20000,
+desig:"Developer",
+dept:{
+deptno:111,
+deptname:'IT',
+location:'Pune'
+},
+project:{
+pname:'artmantis',
+hrs:20
+}
+},
+{
+eno:2,
+ename:"Manjusha Nagpure",
+salary:35000,
+desig:"Developer",
+dept:{
+deptno:111,
+deptname:'IT',
+location:'Pune'
+},
+project:{
+pname:'artmantis',
+hrs:20
+}
+},
+{
+eno:3,
+ename:"Ankita Karanje",
+salary:20000,
+desig:"Civil Engineer",
+dept:{
+deptno:112,
+deptname:'Civil',
+location:'Pune'
+},
+project:{
+pname:'Construction',
+hrs:100
+}
+},
+{
+eno:4,
+ename:"Uma Bidkar",
+salary:20000,
+desig:"Nurse",
+dept:{
+deptno:113,
+deptname:'Dector',
+location:'Pune'
+},
+project:{
+pname:'Gynac',
+hrs:20
+}
+},
+{
+eno:5,
+ename:"Pournima Khengare",
+salary:20000,
+desig:"Project manager",
+dept:{
+deptno:111,
+deptname:'IT',
+location:'Pune'
+},
+project:{
+pname:'artmantis',
+hrs:20
+}
+},
+{
+eno:6,
+ename:"Shubhangi Ghorpade",
+salary:20000,
+desig:"Civil Engineer",
+dept:{
+deptno:112,
+deptname:'Civil',
+location:'Pune'
+},
+project:{
+pname:'Construction',
+hrs:100
+}
+},
+{
+eno:7,
+ename:"Arpita Yenpure",
+salary:20000,
+desig:"Civil Engineer",
+dept:{
+deptno:112,
+deptname:'Civil',
+location:'Pune'
+},
+project:{
+pname:'Construction',
+hrs:100
+}
+},
+{
+eno:8,
+ename:"Prajakta Kamble",
+salary:20000,
+desig:"Developer",
+dept:{
+deptno:111,
+deptname:'IT',
+location:'Pune'
+},
+project:{
+pname:'artmantis',
+hrs:20
+}
+},
+{
+eno:9,
+ename:"Akash Sunthaval",
+salary:70000,
+desig:"Developer",
+dept:{
+deptno:111,
+deptname:'IT',
+location:'Pune'
+},
+project:{
+pname:'artmantis',
+hrs:20
+}
+},
+{
+eno:10,
+ename:"Vikas Wani",
+salary:60000,
+desig:"Developer",
+dept:{
+deptno:111,
+deptname:'IT',
+location:'Pune'
+},
+project:{
+pname:'artmantis',
+hrs:20
+}
+}
+])
+Output:
+3. Display all the documents from Employee collection
+→
+Query:
+db.employee.find();
+Output:
+4. Display all employees whose name starts with “S”
+-> db.Employee.find({
+	ename: {$regex: /^S/, $options: 'i'}
+})
+5. Display all Employee with the designation “Manager”
+-> db.Employee.find({
+	desig: "Manager"
+})
+6. Display all employees with salary >50000 and salary
+db.employee.find({
+salary: {
+$gt: 50000, 
+$lt: 80000
+}
+})
+Output:
+[
+{
+"_id": {
+"$oid": "657463d5882bb59f49af932e"
+},
+"eno": 9,
+"ename": "Akash Sunthaval",
+"salary": 70000,
+"desig": "Developer",
+"dept": {
+"deptno": 111,
+"deptname": "IT",
+"location": "Pune"
+},
+"project": {
+"pname": "artmantis",
+"hrs": 20
+}
+},
+{
+"_id": {
+"$oid": "657463d5882bb59f49af932f"
+},
+"eno": 10,
+"ename": "Vikas Wani",
+"salary": 60000,
+"desig": "Developer",
+"dept": {
+"deptno": 111,
+"deptname": "IT",
+"location": "Pune"
+},
+"project": {
+"pname": "artmantis",
+"hrs": 20
+}
+}
+]
+7. Update no. of hrs to 7 for pname=______
+-> db.Employee.updateOne(
+	{project.pname: "Alice Johnson"},
+	{$set: {"project.hrs": 7}}
+)
+8. Add bonus Rs. 5000 for all employees with salary >50000 and salary <150000
+-> db.Employee.updateMany(
+	{salary: {$gt: 50000, $lt: 150000}},
+	{$inc: {salary: 5000}}
+)
+9. Increase salary by 20% of employees working in deptname=________
+-> db.Employee.updateMany(
+	{"dept.deptname": "Data Science"},
+	{$mul: {salary: 1.2}}
+)
+10. Remove all employees working on pname=________
+-> db.Employee.deleteMany(
+	{"project.pname": "projectz"}
+)

@@ -1,0 +1,123 @@
+Model the following food service industry information as 20 graph
+model, and answer the following queries using Cypher.
+Consider food service industries like ZOMATO, Swiggy around us.
+Popular restaurants are connected to these industries to inc
+ease sell. A
+person order food through this industry and get offers. A person give
+rate(1-5 stars) to company its facility/facilities. and can recomend this
+:to his/her friends.
+4. Identify the labels and relationships, along with their properties, and
+
+
+draw a high-level Graph model.
+
+(:Person {name: "John", contact_number: "123-456-7890"})-[:MAKES_ORDER]->(:Order {order_id: "123", order_date: "2023-01-01"})
+
+(:FoodService {name: "ZOMATO", delivery_time: "30 minutes"})-[:OFFERS]->(:Offer {discount_percentage: 10, valid_until: "2023-02-28"})
+
+(:Person {name: "Alice"})-[:RATES {stars: 4, review_comment: "Great service!"}]->(:FoodService {name: "Swiggy"})
+
+(:Person {name: "Bob"})-[:RECOMMENDS]->(:Person {name: "Jane"})
+
+(:Restaurant {name: "TastyBites", cuisine_type: "Italian"})-[:CONNECTED_TO]->(:FoodService {name: "ZOMATO"})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+5. Create nodes and relationships, along with their properties, and
+
+visualize your actual Graph model.
+
+CREATE (:Person {name: "John", contact_number: "123-456-7890"})
+
+CREATE (:Person {name: "Alice", contact_number: "987-654-3210"})
+
+CREATE (:Restaurant {name: "TastyBites", cuisine_type: "Italian"})
+
+CREATE (:FoodService {name: "ZOMATO", delivery_time: "30 minutes"})
+
+CREATE (:Order {order_id: "123", order_date: "2023-01-01"})
+
+CREATE (:Offer {discount_percentage: 10, valid_until: "2023-02-28"})
+
+CREATE (:Rating {stars: 4, review_comment: "Great service!"})
+
+CREATE (:Recommendation)
+
+
+CREATE (:Person {name: "Bob", contact_number: "111-222-3333"})-[:MAKES_ORDER]->(:Order)
+
+CREATE (:Person {name: "Jane", contact_number: "444-555-6666"})-[:RECOMMENDS]->(:Person)
+
+CREATE (:Person {name: "Carol", contact_number: "777-888-9999"})-[:RATES]->(:FoodService)
+
+CREATE (:FoodService {name: "Swiggy", delivery_time: "25 minutes"})-[:OFFERS]->(:Offer)
+
+CREATE (:Person {name: "Steve", contact_number: "555-666-7777"})-[:MAKES_ORDER]->(:Order)
+
+CREATE (:Person {name: "Sarah", contact_number: "888-999-0000"})-[:MAKES_ORDER]->(:Order)
+
+CREATE (:Restaurant {name: "SpiceHub", cuisine_type: "Indian"})-[:CONNECTED_TO]->(:FoodService)
+
+CREATE (:FoodService {name: "UberEats", delivery_time: "40 minutes"})-[:OFFERS]->(:Offer {discount_percentage: 15, valid_until: "2023-03-15"})
+
+CREATE (:Rating {stars: 5, review_comment: "Excellent food!"})-[:RATES]->(:FoodService)
+
+
+6. Answer the Queries.
+
+a.Count no. of customaevko place order on “1/1/202
+
+MATCH (:Person)-[:MAKES_ORDER]->(o:Order {order_date: "2023-01-01"})
+
+RETURN COUNT(DISTINCT o) AS numberOfOrders;
+
+
+b.List the names of customers whose name starts with S and
+
+place order using Swiggy
+
+MATCH (p:Person)-[:MAKES_ORDER]->(:Order)-[:OFFERS]->(:Offer)<-[:OFFERS]-(f:FoodService {name: "Swiggy"})
+
+WHERE p.name STARTS WITH 'S'
+
+RETURN DISTINCT p.name;
+
+
+
+c.List the names of hotels with high rating (>=4).
+
+MATCH (r:Rating)-[:RATES]->(f:FoodService)
+
+WHERE r.stars >= 4
+
+RETURN DISTINCT f.name;
+
+
+d.List the most recommended hotels imrea.
+
+MATCH (:Person)-[:RECOMMENDS]->(:Person)-[:MAKES_ORDER]->(:Order)-[:OFFERS]->(:Offer)<-[:OFFERS]-(f:FoodService)
+
+WITH f, COUNT(DISTINCT (:Person)-[:RECOMMENDS]->(:Person)) AS recommendations
+
+RETURN f.name
+
+ORDER BY recommendations DESC
+
+LIMIT 1;
+
+
+

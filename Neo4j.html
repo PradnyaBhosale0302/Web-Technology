@@ -1,0 +1,272 @@
+Design an HTML form to take the information of a customer for booking a travel plan consisting of feilds such as name, address, contact number, gender, preferref season(Checkboxes), location type(to be selected from a list) etc. You should provide button to submit as well as reset the form contents
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Travel Plan Booking Form</title>
+
+    <style>
+
+        body {
+
+            font-family: Arial, sans-serif;
+
+            margin: 20px;
+
+        }
+
+
+        form {
+
+            max-width: 400px;
+
+            margin: auto;
+
+        }
+
+
+        label {
+
+            display: block;
+
+            margin-top: 10px;
+
+        }
+
+
+        input, select {
+
+            width: 100%;
+
+            padding: 8px;
+
+            margin-top: 5px;
+
+            margin-bottom: 10px;
+
+            box-sizing: border-box;
+
+        }
+
+
+        button {
+
+            background-color: #4CAF50;
+
+            color: white;
+
+            padding: 10px 15px;
+
+            border: none;
+
+            border-radius: 4px;
+
+            cursor: pointer;
+
+        }
+
+
+        button:hover {
+
+            background-color: #45a049;
+
+        }
+
+
+        .reset-btn {
+
+            background-color: #f44336;
+
+        }
+
+
+        .reset-btn:hover {
+
+            background-color: #d32f2f;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+    <form id="travelForm">
+
+        <label for="name">Name:</label>
+
+        <input type="text" id="name" name="name" required>
+
+
+        <label for="address">Address:</label>
+
+        <input type="text" id="address" name="address" required>
+
+
+        <label for="contact">Contact Number:</label>
+
+        <input type="tel" id="contact" name="contact" required>
+
+
+        <label>Gender:</label>
+
+        <input type="radio" id="male" name="gender" value="male" required>
+
+        <label for="male">Male</label>
+
+        <input type="radio" id="female" name="gender" value="female" required>
+
+        <label for="female">Female</label>
+
+
+        <label>Preferred Season:</label>
+
+        <input type="checkbox" id="spring" name="season" value="spring">
+
+        <label for="spring">Spring</label>
+
+        <input type="checkbox" id="summer" name="season" value="summer">
+
+        <label for="summer">Summer</label>
+
+        <input type="checkbox" id="autumn" name="season" value="autumn">
+
+        <label for="autumn">Autumn</label>
+
+        <input type="checkbox" id="winter" name="season" value="winter">
+
+        <label for="winter">Winter</label>
+
+
+        <label for="locationType">Location Type:</label>
+
+        <select id="locationType" name="locationType" required>
+
+            <option value="beach">Beach</option>
+
+            <option value="mountain">Mountain</option>
+
+            <option value="city">City</option>
+
+            <option value="countryside">Countryside</option>
+
+        </select>
+
+
+        <button type="submit">Submit</button>
+
+        <button type="button" class="reset-btn" onclick="resetForm()">Reset</button>
+
+    </form>
+
+
+    <script>
+
+        function resetForm() {
+
+            document.getElementById("travelForm").reset();
+
+        }
+
+    </script>
+
+
+</body>
+
+</html>
+
+
+Model the following system as a graph model, and answer the que2fes using
+
+Cypher.
+
+Government provides various scholarships for students. A students apply for
+
+scholarship. Student can get benefits of more than one scholarship if satisfies
+
+tthe criteria. Student can recommend it for his friends or other family members
+
+
+1. Identify the labels and relationships, along with their properties, and
+
+draw a high-level Graph model.
+
+(:Student {name: "John", address: "123 Main St"}) -[:APPLIES_FOR]-> (:Scholarship {name: "Merit-based", criteria: "GPA > 3.5", income_limit: "$50,000"})
+
+(:Student {name: "Alice", address: "456 Oak St"}) -[:APPLIES_FOR]-> (:Scholarship {name: "Need-based", criteria: "Family income < $50,000"})
+
+(:Student {name: "Bob", address: "789 Pine St"}) -[:APPLIES_FOR]-> (:Scholarship {name: "STEM Excellence", criteria: "Major in STEM field", income_limit: "$60,000"})
+
+(:Student {name: "John"}) -[:RECOMMENDS]-> (:Student {name: "Jane"})
+
+
+
+
+
+2. Create nodes and relationships, along with their properties, and visualize
+
+your actual Graph model.
+
+CREATE (:Student {name: "John", address: "123 Main St"})-[:APPLIES_FOR]->(:Scholarship {name: "Merit-based", criteria: "GPA > 3.5", income_limit: "$50,000"})
+
+CREATE (:Student {name: "Alice", address: "456 Oak St"})-[:APPLIES_FOR]->(:Scholarship {name: "Need-based", criteria: "Family income < $50,000"})
+
+CREATE (:Student {name: "Bob", address: "789 Pine St"})-[:APPLIES_FOR]->(:Scholarship {name: "STEM Excellence", criteria: "Major in STEM field", income_limit: "$60,000"})
+
+CREATE (:Student {name: "John"})-[:RECOMMENDS]->(:Student {name: "Jane"})
+
+
+3. Answer the following Queries in Cypher:
+
+a. List the names of scholarship for OBC category.
+
+MATCH (s:Scholarship)
+
+WHERE s.category = "OBC"
+
+RETURN s.name;
+
+
+b. Count no. of students who are benefitted by ___ scholarship in year
+
+2020-2021
+
+MATCH (s:Student)-[:APPLIES_FOR]->(sch:Scholarship {name: "Merit-based"})
+
+WHERE s.benefit_year = "2020-2021"
+
+RETURN COUNT(s);
+
+
+c. Update the income limit for scholarship.
+
+MATCH (s:Scholarship {name: "Merit-based"})
+
+SET s.income_limit = "$55,000";
+
+
+d. List the most popular scholarship.
+
+MATCH (sch:Scholarship)<-[:APPLIES_FOR]-(s:Student)
+
+RETURN sch.name, COUNT(s) AS popularity
+
+ORDER BY popularity DESC
+
+LIMIT 1;
+
+
+
+
+
+

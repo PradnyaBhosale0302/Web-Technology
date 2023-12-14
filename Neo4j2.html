@@ -1,0 +1,101 @@
+Model the following movie system as a Graph database. 20
+Consider a information about of movie and actors. One movie can have
+more than one actor [
+1. Identify the labels and relationships, along with their prop!
+
+draw a high-level Graph model.
+
+(:Actor {name: "Leonardo DiCaprio", age: 47})-[:ACTED_IN]->(:Movie {title: "Inception", business: 800000000, awards: 4})
+
+(:Actor {name: "Christian Bale", age: 48})-[:ACTED_IN]->(:Movie {title: "The Dark Knight", business: 1000000000, awards: 2})
+
+(:Actor {name: "John Travolta", age: 68})-[:ACTED_IN]->(:Movie {title: "Pulp Fiction", business: 213000000, awards: 1})
+
+(:Actor {name: "Jamie Foxx", age: 54})-[:ACTED_IN]->(:Movie {title: "Django Unchained", business: 425000000, awards: 3})
+
+
+2. Create nodes and relationships, along with their properties, and
+
+visualize your actual Graph model.
+
+// Creating Movies
+
+CREATE (:Movie {title: "Inception", business: 800000000, awards: 4})
+
+CREATE (:Movie {title: "The Dark Knight", business: 1000000000, awards: 2})
+
+CREATE (:Movie {title: "Pulp Fiction", business: 213000000, awards: 1})
+
+CREATE (:Movie {title: "Django Unchained", business: 425000000, awards: 3})
+
+
+// Creating Actors
+
+CREATE (:Actor {name: "Leonardo DiCaprio", age: 47})
+
+CREATE (:Actor {name: "Christian Bale", age: 48})
+
+CREATE (:Actor {name: "John Travolta", age: 68})
+
+CREATE (:Actor {name: "Jamie Foxx", age: 54})
+
+
+// Creating Relationships
+
+MATCH (m:Movie {title: "Inception"}), (a:Actor {name: "Leonardo DiCaprio"})
+
+CREATE (a)-[:ACTED_IN]->(m)
+
+
+MATCH (m:Movie {title: "The Dark Knight"}), (a:Actor {name: "Christian Bale"})
+
+CREATE (a)-[:ACTED_IN]->(m)
+
+
+MATCH (m:Movie {title: "Pulp Fiction"}), (a:Actor {name: "John Travolta"})
+
+CREATE (a)-[:ACTED_IN]->(m)
+
+
+MATCH (m:Movie {title: "Django Unchained"}), (a:Actor {name: "Jamie Foxx"})
+
+CREATE (a)-[:ACTED_IN]->(m)
+
+
+
+
+
+3. Answer the Queries:
+
+a. Find movie which made highest business.
+
+MATCH (m:Movie)
+
+WITH m ORDER BY m.business DESC LIMIT 1
+
+RETURN m.title AS movieTitle, m.business AS business;
+
+
+b. Display details of movie along with actors.
+
+MATCH (m:Movie)-[:ACTED_IN]->(a:Actor)
+
+RETURN m.title AS movieTitle, m.business AS business, COLLECT(a.name) AS actors;
+
+
+List all thenovie of “Shahrukh Khan”.
+
+MATCH (a:Actor {name: "Shahrukh Khan"})-[:ACTED_IN]->(m:Movie)
+
+RETURN m.title AS movieTitle, m.business AS business;
+
+
+d. Display all movie having more than 2 awards received
+
+MATCH (m:Movie)
+
+WHERE m.awards > 2
+
+RETURN m.title AS movieTitle, m.business AS business, m.awards AS awards;
+
+

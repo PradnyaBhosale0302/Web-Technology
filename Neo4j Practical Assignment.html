@@ -1,0 +1,83 @@
+Neo4j Practical Assignment
+11.Library Database : 
+i.List all people, who have issued a book “……”
+MATCH (person:Person)-[:ISSUED]->(book:Book {title: "..."})
+RETURN person.name;
+
+ii.Count the number of people who have read “ ….”
+MATCH (person:Person)-[:READ]->(book:Book {title: "..."})
+RETURN COUNT(DISTINCT person) AS numberOfPeople;
+
+iii.Add a property “Number of books issued “ for Mr. Joshi and set its value as thecount
+MATCH (person:Person {name: "Mr. Joshi"})-[:ISSUED]->(books)
+SET person.numberOfBooksIssued = COUNT(books);
+
+iv.List the names of publishers from pune city.
+MATCH (publisher:Publisher {city: "Pune"})
+RETURN publisher.name;
+
+12.Song Database:
+i.List the names of songs written by “:…..”
+MATCH (song:Song)-[:WRITTEN_BY]->(writer:Writer {name: "..."})
+RETURN song.name;
+
+ii.List the names of record companies who have financed for the song “….”
+MATCH (song:Song {name: "..."})<-[:FINANCED]-(company:RecordCompany)
+RETURN company.name;
+
+iii.List the names of artist performing the song “…..” 
+MATCH (song:Song {name: "..."})<-[:PERFORMING]-(artist:Artist)
+RETURN artist.name;
+
+iv.Name the songs recorded by the studio “ …….”
+MATCH (song:Song)<-[:RECORDED]-(studio:Studio {name: "..."})
+RETURN song.name;
+
+13.Library database 
+a) List all readers who have recommended either book “…” or “……..” or “”
+MATCH (reader:Reader)-[:RECOMMENDED]->(book:Book)
+WHERE book.title IN ["...", "......", ""]
+RETURN DISTINCT reader.name;
+
+
+b) List the readers who haven‟t recommended any book
+MATCH (reader:Reader)
+WHERE NOT (reader)-[:RECOMMENDED]->(:Book)
+RETURN reader.name;
+
+c) List the authors who have written a book that has been read / issued by maximum numberof readers.
+MATCH (author:Author)-[:WROTE]->(book:Book)<-[:READ|ISSUED]-(reader:Reader)
+WITH author, COUNT(DISTINCT reader) AS readerCount
+ORDER BY readerCount DESC
+LIMIT 1
+RETURN author.name;
+
+d) List the names of books recommended by “...................... ” And read by at least one reader
+MATCH (reader:Reader {name: "......................"})-[:RECOMMENDED]->(book:Book)<-[:READ]-(otherReader:Reader)
+RETURN DISTINCT book.title;
+
+e) List the names of books recommended by “...................... ” and read by maximum number of readers. 
+MATCH (reader:Reader {name: "......................"})-[:RECOMMENDED]->(book:Book)<-[:READ]-(otherReader:Reader)
+WITH book, COUNT(DISTINCT otherReader) AS readerCount
+ORDER BY readerCount DESC
+LIMIT 1
+RETURN book.title;
+
+f) List the names of publishers who haven‟t published any books written by authors fromPune and Mumbai.
+MATCH (publisher:Publisher)-[:PUBLISHED]->(book:Book)<-[:WROTE]-(author:Author)
+WHERE author.city <> "Pune" AND author.city <> "Mumbai"
+WITH publisher, COLLECT(DISTINCT author.city) AS authorCities
+WHERE ALL(city IN ["Pune", "Mumbai"] WHERE NOT city IN authorCities)
+RETURN publisher.name;
+
+g) List the names of voracious readers in our library ...........
+MATCH (reader:Reader)-[:READ]->(:Book)
+WITH reader, COUNT(DISTINCT reader)-1 AS bookCount
+ORDER BY bookCount DESC
+LIMIT 1
+RETURN reader.name;
+
+
+
+
+
